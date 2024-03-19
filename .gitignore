@@ -21,3 +21,17 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+Thumbs.db
+ehthumbs.db
+
+/tmp
+/temp
+
+*.log
+
+/.next/
+/out/
+
+/.idea
+/.vscode

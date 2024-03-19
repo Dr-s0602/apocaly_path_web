@@ -1,0 +1,100 @@
+/* global.css */
+
+.flex-container {
+    display: flex;
+}
+
+.navigation-container {
+    /* 네비게이션 바의 스타일 */
+}
+
+.left-nav-container {
+    flex: 0 0 15vh;
+    max-width: 10em;
+    /* 왼쪽 네비게이션의 스타일 */
+}
+
+.main-content-container {
+    flex: 1;
+    /* 메인 컨텐츠 영역의 스타일 */
+}
+
+.navigation_bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background-color: black;
+}
+
+.navigation_bar img {
+    height: 5vw;
+}
+
+.navigation_bar ul {
+    display: flex;
+    justify-content: space-around;
+    width: 50vh;
+    list-style: none;
+    cursor: pointer
+}
+
+.navigation_bar li {
+    color: white;
+}
+
+.navigation_bar p {
+    color: white;
+    min-width: 3em;
+    cursor: pointer
+}
+
+.map_div{
+    position: relative;
+    width: 29vh;
+}
+
+.map_div::after{
+    display: block;
+    content: "";
+    padding-bottom: 100%;
+}
+
+.map_content{
+    position: absolute;
+    width: 100%;
+}
+
+.square {
+    width: 1.5vh;
+    height: 1.5vh;
+    display: inline-block;
+    margin: 0;
+    border: solid 1px #333;
+}
+
+.hidden {
+    background-color: black;
+}
+
+.revealed {
+    background-color: white;
+}
+
+.current {
+    background-color: red;
+}
+
+.adjacent {
+    background-color: grey;
+}
+
+/* 초록색 칸 스타일 */
+.square.special-green {
+    background-color: green;
+}
+
+/* 노란색 칸 스타일 */
+.square.special-yellow {
+    background-color: yellow;
+}
