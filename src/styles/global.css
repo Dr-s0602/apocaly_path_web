@@ -98,3 +98,81 @@
 .square.special-yellow {
     background-color: yellow;
 }
+
+
+
+/* 모바일 뷰 (기본 스타일) */
+.background-container {
+    background-image: url('/image/main.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    height: 100%;
+    width: 100%;
+}
+
+/* 태블릿 뷰 */
+@media (min-width: 768px) {
+    .background-container {
+        /* 태블릿에 적합한 스타일 */
+    }
+}
+
+/* 데스크톱 뷰 */
+@media (min-width: 992px) {
+    .background-container {
+        /* 데스크톱에 적합한 스타일 */
+    }
+}
+
+.center-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 수직 중앙 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+    height: 60vh;
+    width: 100vw;
+}
+
+/* 폼의 너비를 지정하고, 패딩과 테두리를 너비 계산에 포함 */
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* 폼 너비를 전체로 설정 */
+    max-width: 20vw; /* 폼의 최대 너비 설정 */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #ffffff;
+    box-sizing: border-box;
+}
+
+.form-group {
+    display: flex;
+    justify-content: flex-start; /* 레이블을 시작 지점에 정렬 */
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.form-group label {
+    min-width: 100px;
+    text-align: right; /* 레이블 텍스트를 우측 정렬 */
+}
+
+.form-group input {
+    flex-grow: 1; /* 입력 필드가 남은 공간을 모두 차지하도록 설정 */
+    margin-left: 10px;
+}
+
+/* 버튼을 중앙에 위치시키기 위한 스타일 */
+.button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.button-container button {
+    margin-top: 10px;
+}
