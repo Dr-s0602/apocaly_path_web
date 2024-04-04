@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import {login} from "../../api/user";
+import {handleAxiosError} from "../../api/errorAxiosHandle";
+import {useRouter} from "next/dist/client/router"
 
 const LoginForm = () => {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -17,8 +21,14 @@ const LoginForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // 로그인 로직을 여기에 구현하세요.
-        console.log("로그인 시도:", formData);
-        // 예: 서버에 로그인 요청 보내기
+        const { email, password} = formData;
+        const loginData = {
+            email:email,
+            password:password,
+        }
+        login(loginData).then(res =>{
+            router.push("/");
+        }).catch(handleAxiosError)
     };
 
     return (

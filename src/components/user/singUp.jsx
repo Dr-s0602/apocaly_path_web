@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import {singUp} from "../../api/user";
+import {useRouter} from "next/dist/client/router"
+import {handleAxiosError} from "../../api/errorAxiosHandle";
 
 const SignUpForm = () => {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -28,8 +31,8 @@ const SignUpForm = () => {
             password:password,
         }
         singUp(singUpData).then(res =>{
-            console.log(res);
-        })
+            router.push("/user/login")
+        }).catch(handleAxiosError)
     };
 
     return (

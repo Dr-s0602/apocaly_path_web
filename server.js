@@ -3,7 +3,7 @@ const { parse } = require('url');
 const next = require('next');
 const fs = require('fs');
 
-const port = 3005; // 사용할 포트 번호
+const port = 3000; // 사용할 포트 번호
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
