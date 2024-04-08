@@ -1,4 +1,5 @@
 import axios from "./axiosApi"
+import {authStore} from "../stroes/authStore";
 
 const baseUrl = "/api/auth"
 export const singUp = (singUpData) => {
@@ -15,6 +16,7 @@ export const login = (loginData) => {
             if (token) {
                 const pureToken = token.split(' ')[1];
                 window.localStorage.setItem("token", pureToken);
+                authStore.checkLoggedIn()
             }
             return response;
         })

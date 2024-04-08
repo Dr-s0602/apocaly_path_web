@@ -1,7 +1,19 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
+import {observer} from "mobx-react";
+import {authStore} from "../../stroes/authStore";
 
-const NavigationBar = () => {
+const NavigationBar = observer(()=>{
+    const loggedIn = authStore.loggedIn;
+    useEffect(()=>{
+        authStore.checkLoggedIn()
+    },[authStore.loggedIn])
+
+    // 로그아웃 핸들러
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        authStore.setLoggedIn(false);
+    };
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Container>
@@ -15,14 +27,22 @@ const NavigationBar = () => {
                         <Nav.Link>공지사항</Nav.Link>
                         <Nav.Link>게시판</Nav.Link>
                     </Nav>
-                    <Nav>
-                        <Nav.Link href={"/user/login"}>로그인</Nav.Link>
-                        <Nav.Link href={"/user"}>회원가입</Nav.Link>
-                    </Nav>
+                    {
+                        loggedIn ?
+                            <Nav>
+                                <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
+                                <Nav.Link href={"/"}>내 정보</Nav.Link>
+                            </Nav>
+                            :
+                            <Nav>
+                                <Nav.Link href={"/user/login"}>로그인</Nav.Link>
+                                <Nav.Link href={"/user"}>회원가입</Nav.Link>
+                            </Nav>
+                    }
                 </Navbar.Collapse>
             </Container>
         </Navbar>
     );
-}
+})
 
 export default NavigationBar;
