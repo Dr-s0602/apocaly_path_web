@@ -16,6 +16,8 @@ export const login = (loginData) => {
             if (token) {
                 const pureToken = token.split(' ')[1];
                 window.localStorage.setItem("token", pureToken);
+                console.log("response", response.data);
+                authStore.setIsAdmin(response.data.isAdmin)
                 authStore.checkLoggedIn()
             }
             return response;
