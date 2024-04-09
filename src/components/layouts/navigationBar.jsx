@@ -29,7 +29,7 @@ const NavigationBar = observer(()=>{
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link href="/start" >시작하기</Nav.Link>
-                        <Nav.Link>공지사항</Nav.Link>
+                        <Nav.Link href={"/notice"}>공지사항</Nav.Link>
                         <Nav.Link>게시판</Nav.Link>
                     </Nav>
                     {

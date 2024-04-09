@@ -1,8 +1,8 @@
-import "../styles/global.css";
 import 'bootstrap/dist/css/bootstrap.css';
-import NavigationBar from "../components/layouts/navigationBar";
+import "../styles/global.css";
 import Head from "next/head";
-import { ThemeProvider, Container, Row, Col } from "react-bootstrap";
+import NavigationBar from "../components/layouts/navigationBar";
+import { ThemeProvider, Container } from "react-bootstrap";
 
 const MyApp = ({ Component, pageProps }) => {
     return (
