@@ -15,3 +15,10 @@ export const getNoticeList = ({ category, status, title, page, size }) => {
             return res.data;
         });
 }
+
+export const writePost = (postData) =>{
+    return axios.post("/notice",postData).then(res =>{
+        console.log("res :", res);
+        return res;
+    })
+}
