@@ -8,31 +8,50 @@ const instance = axios.create({
 // 요청 인터셉터 추가
 instance.interceptors.request.use(
     config => {
-        // 요청을 보내기 전에 작업 수행
-        const token = localStorage.getItem('token'); // 예시로 토큰을 localStorage에서 가져옵니다.
-        if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`; // 토큰이 있다면 헤더에 추가합니다.
+        // '/reissue' 요청은 인터셉터에서 액세스 토큰을 추가하지 않도록 합니다.
+        if (config.url !== '/reissue') {
+            const token = localStorage.getItem('token');
+            if (token) {
+                config.headers['Authorization'] = `Bearer ${token}`;
+            }
         }
         return config;
     },
-    error => {
-        // 요청 오류 처리를 수행합니다.
-        return Promise.reject(error);
-    }
+    error => Promise.reject(error)
 );
+
+
+const refreshToken = async () => {
+    const refreshToken = localStorage.getItem('refresh');
+    const response = await instance.post('/reissue', null, {
+        headers: {
+            'Authorization': `Bearer ${refreshToken}`
+        }
+    });
+    const token = response.headers['authorization'] || response.headers['Authorization'];
+    const pureToken = token.split(' ')[1];
+    localStorage.setItem('token', pureToken);
+    return pureToken;
+};
+
+
 
 // 응답 인터셉터 추가
 instance.interceptors.response.use(
-    response => {
-        // 응답 데이터를 처리합니다.
-        return response;
-    },
-    error => {
-        // 응답 오류 처리를 수행합니다.
-        if (error.response) {
-            if (error.response.status === 401) {
-                // 401 오류가 발생하면 로그인 페이지 등으로 리다이렉트할 수 있습니다.
-            }
+    response => response, // 정상 응답
+    async (error) => {
+        const originalRequest = error.config;
+
+        // 401 오류가 발생하고, 이미 재시도를 한 적이 없다면
+        if (error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true; // 재시도 했음을 표시
+
+            // 토큰을 갱신하고 재시도
+            const newAccessToken = await refreshToken();
+            originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+
+            // 원래 요청을 다시 수행
+            return instance(originalRequest);
         }
         return Promise.reject(error);
     }

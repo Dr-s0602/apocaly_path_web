@@ -11,7 +11,7 @@ const NavigationBar = observer(()=>{
 
     useEffect(()=>{
         authStore.checkLoggedIn()
-    },[authStore.loggedIn])
+    },[])
 
     // 로그아웃 핸들러
     const handleLogout = () => {

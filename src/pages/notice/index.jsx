@@ -1,9 +1,10 @@
 import {observer} from "mobx-react";
-import PostCard from "../../components/post/postCard";
+import PostCard from "../../components/post/PostCard";
 import {useEffect, useState} from "react";
-import {getNoticeList} from "../../api/notice";
+import {getNoticeList, writePost} from "../../api/notice";
 import {handleAxiosError} from "../../api/errorAxiosHandle";
 import {authStore} from "../../stroes/authStore";
+import WritePostModal from "../../components/post/WritePostModal";
 
 const NoticeComponent = observer(() => {
     const [noticeList, setNoticeList] = useState([]);
@@ -15,13 +16,13 @@ const NoticeComponent = observer(() => {
     const [searchTitle, setSearchTitle] = useState("");
     const [searchInput, setSearchInput] = useState(""); // 검색어 임시 저장
 
-    useEffect(() => {
-        console.log("authStore.isAdmin",authStore.isAdmin);
+
+    const fetchNotices = () => {
         const listData = {
             category: category,
             status: "activated",
             title: searchTitle,
-            page: page,
+            page: page - 1,
             size: size,
         };
         getNoticeList(listData)
@@ -31,7 +32,15 @@ const NoticeComponent = observer(() => {
                 setTotalPages(res.totalPages);
             })
             .catch(handleAxiosError);
+    };
+
+    useEffect(() => {
+        fetchNotices();
     }, [category, page, size, searchTitle]);
+
+    useEffect(()=>{
+        authStore.setIsAdmin(window.localStorage.getItem("isAdmin"))
+    },[])
 
     const handleSearchChange = (e) => {
         setSearchInput(e.target.value);
@@ -48,6 +57,25 @@ const NoticeComponent = observer(() => {
     };
     const handleSizeChange = (e) => {
         setSize(e.target.value);
+    };
+
+    const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+
+    const openModal = () => setIsModalOpen(true); // 모달 열기
+    const closeModal = () => setIsModalOpen(false); // 모달 닫기
+
+    // 모달 제출 처리 함수
+    const handleSubmit = (postData) => {
+        // 글쓰기 로직 구현
+        // console.log("글이 제출되었습니다.", postData);
+        writePost(postData).then(res=>{
+            console.log("res : ",res);
+            fetchNotices();
+        }).catch(handleAxiosError)
+            .finally(() => {
+                // 모든 작업이 끝난 후 모달 닫기
+                closeModal();
+            });
     };
 
     return (
@@ -74,10 +102,12 @@ const NoticeComponent = observer(() => {
             <table className="table">
                 <thead>
                 <tr>
-                    <th>#</th>
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>작성일</th>
+                    <th style={{width:"5vw", textAlign:"center"}}>말머리</th>
+                    <th style={{textAlign:"center"}}>제목</th>
+                    <th style={{width:"10vw", textAlign:"center"}}>글쓴이</th>
+                    <th style={{width:"7vw", textAlign:"center"}}>작성일</th>
+                    <th style={{width:"4vw", textAlign:"center"}}>조회</th>
+                    <th style={{width:"4vw", textAlign:"center"}}>추천</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -92,9 +122,10 @@ const NoticeComponent = observer(() => {
             </table>
             { authStore.isAdmin &&
                 <div>
-                    <button> 글쓰기</button>
+                    <button onClick={openModal}>글쓰기</button>
                 </div>
             }
+            <WritePostModal isOpen={isModalOpen} onClose={closeModal} onSubmit={handleSubmit} />
         </div>
     );
 });

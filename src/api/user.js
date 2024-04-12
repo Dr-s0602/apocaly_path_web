@@ -13,10 +13,12 @@ export const login = (loginData) => {
         .then(response => {
             // 성공적인 응답 처리
             const token = response.headers['authorization'] || response.headers['Authorization'];
+            console.log("response",response);
             if (token) {
                 const pureToken = token.split(' ')[1];
                 window.localStorage.setItem("token", pureToken);
-                console.log("response", response.data);
+                window.localStorage.setItem("isAdmin", response.data.isAdmin);
+                window.localStorage.setItem("refresh", response.data.refresh)
                 authStore.setIsAdmin(response.data.isAdmin)
                 authStore.checkLoggedIn()
             }
