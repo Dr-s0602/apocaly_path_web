@@ -3,6 +3,7 @@ import { Navbar, Nav, Container } from 'react-bootstrap';
 import {observer} from "mobx-react";
 import {authStore} from "../../stroes/authStore";
 import {useRouter} from "next/dist/client/router"
+import {logout} from "../../api/user";
 
 const NavigationBar = observer(()=>{
 
@@ -15,9 +16,13 @@ const NavigationBar = observer(()=>{
 
     // 로그아웃 핸들러
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        router.push("/");
-        authStore.setLoggedIn(false);
+        logout().then(res =>{
+            console.log("res",res);
+            localStorage.removeItem('token');
+            router.push("/");
+            authStore.setLoggedIn(false);
+        })
+
     };
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">

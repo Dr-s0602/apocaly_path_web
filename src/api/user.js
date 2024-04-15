@@ -30,3 +30,9 @@ export const login = (loginData) => {
             throw error;
         });
 };
+
+export const logout = () =>{
+    return axios.post("/logout").then(res =>{
+        return res
+    })
+}
