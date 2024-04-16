@@ -1,13 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import {observer} from "mobx-react";
-import {authStore} from "../../stroes/authStore";
-import {useRouter} from "next/dist/client/router"
+import {authStore} from "../../stores/authStore";
 import {logout} from "../../api/user";
 
 const NavigationBar = observer(()=>{
 
-    const router = useRouter();
     const loggedIn = authStore.loggedIn;
 
     useEffect(()=>{
@@ -17,9 +15,7 @@ const NavigationBar = observer(()=>{
     // 로그아웃 핸들러
     const handleLogout = () => {
         logout().then(res =>{
-            console.log("res",res);
-            localStorage.removeItem('token');
-            router.push("/");
+            localStorage.clear();
             authStore.setLoggedIn(false);
         })
 
