@@ -22,3 +22,19 @@ export const writePost = (postData) =>{
         return res;
     })
 }
+
+export const postReadCountUp = (postId) => {
+    axios.post(`/notice/read/${postId}`).then(response => {
+        console.log('Read count incremented successfully', response);
+    }).catch(error => {
+        console.error('Error incrementing read count', error);
+    });
+}
+
+export const noticeLikeUp = (requestData) => {
+    axios.post("/notice/likes", requestData).then(res =>{
+        console.log("successfully like ", res)
+    }).catch(err =>{
+        console.log("error like", err);
+    })
+}
