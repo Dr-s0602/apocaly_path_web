@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {singUp} from "../../api/user";
 import {useRouter} from "next/dist/client/router"
 import {handleAxiosError} from "../../api/errorAxiosHandle";
+import KakaoSignup from "./KakaoSignup";
 
 const SignUpForm = () => {
     const router = useRouter();
@@ -53,6 +54,7 @@ const SignUpForm = () => {
                 <div className="button-container">
                     <button type="submit">회원가입</button>
                 </div>
+                <KakaoSignup/>
             </form>
         </div>
     );

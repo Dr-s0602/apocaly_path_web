@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import PostCard from "../../components/post/PostCard";
 import WritePostModal from "../../components/post/WritePostModal";
-import { getNoticeList, writePost } from "../../api/notice";
+import {getNoticeList, noticeLikeUp, postReadCountUp, writePost} from "../../api/notice";
 import { handleAxiosError } from "../../api/errorAxiosHandle";
 import DetailPostModal from "../../components/post/DetailPostModal";
 
@@ -28,7 +28,7 @@ const NoticeComponent = observer(() => {
 
     const writePostMutation = useMutation(writePost, {
         onSuccess: () => {
-            queryClient.invalidateQueries('noticeList');
+            queryClient.invalidateQueries('noticeList').then();
         },
         onError: handleAxiosError,
     });
@@ -58,16 +58,45 @@ const NoticeComponent = observer(() => {
     const [selectedPost, setSelectedPost] = React.useState(null);
     const [isDetailModalOpen, setIsDetailModalOpen] = React.useState(false);
 
+    const readCountMutation = useMutation(postReadCountUp, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('noticeList').then();
+        },
+        onError: handleAxiosError,
+    });
+
     const openDetailModal = (post) => {
+        readCountMutation.mutate(post.id);
         setSelectedPost(post);
         setIsDetailModalOpen(true);
     };
+
 
     const closeDetailModal = () => {
         setSelectedPost(null);
         setIsDetailModalOpen(false);
     };
 
+
+    const likeMutation = useMutation(noticeLikeUp, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('noticeList').then();
+        },
+        onError: handleAxiosError,
+    });
+
+    const handleLike = () => {
+        const requestData = {
+            noticeId: selectedPost.id,
+        };
+        likeMutation.mutate(requestData);
+    };
+
+
+    const handleEdit = () => {
+        console.log('Edit post:', selectedPost.id);
+        // 포스트 수정 페이지로 이동하거나 수정 모달을 열 수 있음
+    };
 
 
     if (isLoading) return <div>Loading...</div>;
@@ -112,7 +141,14 @@ const NoticeComponent = observer(() => {
                 </div>
             )}
             <WritePostModal isOpen={isModalOpen} onClose={closeModal} onSubmit={handleSubmit} />
-            <DetailPostModal isOpen={isDetailModalOpen} onClose={closeDetailModal} post={selectedPost} />
+            <DetailPostModal
+                isOpen={isDetailModalOpen}
+                onClose={closeDetailModal}
+                post={selectedPost}
+                onLike={handleLike}
+                onEdit={handleEdit}
+                isAdmin={isAdmin}
+            />
         </div>
     );
 });

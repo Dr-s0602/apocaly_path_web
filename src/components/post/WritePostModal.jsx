@@ -1,24 +1,40 @@
-// WritePostModal.js
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import {uploadFile} from "../../api/file"; // 파일 업로드 API를 import 합니다.
 
 const WritePostModal = ({ isOpen, onClose, onSubmit }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [isPinned, setIsPinned] = useState(false);
+    const [files, setFiles] = useState([]);
 
-    // 폼 제출 처리
-    const handleSubmit = () => {
-        // is_pinned 값을 변경하고 싶다면, 여기서 isPinned 상태를 사용하면 됩니다.
-        // 예를 들어, checkbox 등의 입력을 통해 사용자가 선택하도록 할 수 있습니다.
-        // category는 공지사항(notice)으로 고정되어 있습니다.
-        onSubmit({
-            title,
-            content,
-            isPinned,
-            category: 'notice'
-        });
-        onClose(); // 모달 닫기
+    const handleFileChange = (e) => {
+        setFiles(e.target.files);
     };
+
+    const handleSubmit = async () => {
+        try {
+            const fileUploadPromises = Array.from(files).map((file, index) => uploadFile(file, index));
+            const uploadedFileIds = await Promise.all(fileUploadPromises);
+
+            onSubmit({
+                title,
+                content,
+                isPinned,
+                fileIds: uploadedFileIds,
+                category: 'notice'
+            });
+            onClose();
+        } catch (error) {
+            console.error("Error uploading files:", error);
+        }
+    };
+
+    useEffect(()=>{
+        setTitle("")
+        setContent("")
+        setIsPinned(false)
+        setFiles(null);
+    },[isOpen])
 
     if (!isOpen) return null;
 
@@ -62,6 +78,7 @@ const WritePostModal = ({ isOpen, onClose, onSubmit }) => {
                     />
                     공지사항으로 등록
                 </label>
+                <input type="file" multiple onChange={handleFileChange} />
                 <button onClick={handleSubmit}>제출</button>
                 <button onClick={onClose}>취소</button>
             </div>

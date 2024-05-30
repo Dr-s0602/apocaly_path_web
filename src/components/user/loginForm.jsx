@@ -3,6 +3,7 @@ import { useMutation } from 'react-query';
 import { login } from '../../api/user';
 import { handleAxiosError } from '../../api/errorAxiosHandle';
 import { useRouter } from 'next/router';
+import KakaoLogin from "./KakaoLogin";
 
 const LoginForm = () => {
     const router = useRouter();
@@ -71,7 +72,7 @@ const LoginForm = () => {
                     {/* 에러 발생 시 에러 메시지는 handleAxiosError 함수에서 처리합니다.
                         따라서 여기에 별도로 에러 메시지를 표시할 필요는 없습니다. */}
                 </div>
-
+                <KakaoLogin/>
             </form>
         </div>
     );

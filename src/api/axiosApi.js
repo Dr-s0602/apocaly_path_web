@@ -22,17 +22,36 @@ instance.interceptors.request.use(
 
 
 const refreshToken = async () => {
-    const refreshToken = localStorage.getItem('refresh');
-    const response = await instance.post('/reissue', null, {
-        headers: {
-            'Authorization': `Bearer ${refreshToken}`
+    try {
+        const refreshToken = localStorage.getItem('refresh');
+        const response = await instance.post('/reissue', null, {
+            headers: {
+                'Authorization': `Bearer ${refreshToken}`
+            }
+        });
+        const token = response.headers['authorization'] || response.headers['Authorization'];
+        const pureToken = token.split(' ')[1];
+        localStorage.setItem('token', pureToken);
+        return pureToken;
+    } catch (error) {
+        // 에러 응답을 확인합니다.
+        if (error.response && error.response.data === 'refresh token expired') {
+            // 리프레시 토큰이 만료된 경우 로그아웃 처리
+            logout();
+        } else {
+            // 다른 종류의 에러 처리
+            console.error('An error occurred:', error);
         }
-    });
-    const token = response.headers['authorization'] || response.headers['Authorization'];
-    const pureToken = token.split(' ')[1];
-    localStorage.setItem('token', pureToken);
-    return pureToken;
+    }
 };
+
+const logout = () => {
+    // 로컬 스토리지의 모든 항목을 비웁니다.
+    localStorage.clear();
+    // 로그인 페이지로 리다이렉트
+    window.location.href = '/user/login';
+};
+
 
 
 

@@ -9,8 +9,8 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const httpsOptions = {
-    key: fs.readFileSync('./apocaly_path_web-key.pem'), // 키 파일 경로
-    cert: fs.readFileSync('./apocaly_path_web.pem'), // 인증서 파일 경로
+    // key: fs.readFileSync('./apocaly_path_web-key.pem'), // 키 파일 경로
+    // cert: fs.readFileSync('./apocaly_path_web.pem'), // 인증서 파일 경로
 };
 
 app.prepare().then(() => {
